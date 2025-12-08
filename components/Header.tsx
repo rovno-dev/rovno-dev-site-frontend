@@ -1,32 +1,31 @@
-import { Box, Container } from "@mui/material";
-import RovnoLogotype from "./RovnoLogotype";
+import { Container } from "@/components/core/layout/Container";
+import RovnoLogotype from "./core/data-display/RovnoLogotype";
 import { colorStyles } from "@/utils/styles/colors";
-import { RefObject } from "react";
+import Link from "next/link";
 
-export default function Header(ref?: RefObject<unknown>) {
+export default function Header() {
   return (
-    <Box
-      ref={ref}
-      position={'fixed'}
-      top={0}
-      left={0}
-      paddingInline={'32px'}
-      paddingBlock={'24px'}
-      justifyContent={'center'}
-      width={'100%'}
-      border={`1px solid ${colorStyles.dark.background.border.default}`}
-      sx={{
+    <div
+      style={{
+        paddingInline: '32px',
+        paddingBlock: '24px',
+        justifyContent: 'center',
+        width: '100%',
+        border: `1px solid ${colorStyles.dark.background.border.default}`,
         backgroundColor: colorStyles.dark.background.card.default,
       }}
     >
       <Container
-        sx={{
+        variant="full-width"
+        style={{
           display: 'flex',
           justifyContent: 'center',
         }}
       >
-        <RovnoLogotype height={50} />
+        <Link href={'/'}>
+          <RovnoLogotype height={50} />
+        </Link>
       </Container>
-    </Box>
+    </div >
   );
 }

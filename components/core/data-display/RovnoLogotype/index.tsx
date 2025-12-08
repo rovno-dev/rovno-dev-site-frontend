@@ -1,6 +1,4 @@
-import { IconProps } from "@/utils/types";
-import RovnoLogotypeIcon from "./LogotypeIcon";
-import RovnoLogotypeWordmark from "./LogotypeWordmark";
+import { IconProps } from "@/utils/interfaces";
 
 export default function RovnoLogotype({ width = 254, height = 63, style }: IconProps) {
   return (

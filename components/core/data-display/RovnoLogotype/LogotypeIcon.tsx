@@ -1,5 +1,5 @@
 import { colorStyles } from "@/utils/styles/colors";
-import { IconProps } from "@/utils/types";
+import { IconProps } from "@/utils/interfaces";
 
 
 export default function RovnoLogotypeIcon({ width = 62, height = 62, style }: IconProps) {

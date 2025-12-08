@@ -1,7 +1,10 @@
-import type { Metadata } from "next";
 import "./globals.css";
+import type { Metadata } from "next";
 import { colorStyles } from "@/utils/styles/colors";
-import ClientLayoutShell from "./ClientLayoutShell";
+import { NotoSans } from "./connectFonts";
+import { ThemeProvider } from "@mui/material";
+import { theme } from "./theme";
+import ClientLayout from "./ClientLayout";
 
 export const metadata: Metadata = {
   title: "Digital-агентство Rovno.dev",
@@ -17,17 +20,22 @@ export default function RootLayout({
     <html
       lang="en"
       style={{
+        height: "100%",
         fontSize: '16px',
       }}
+      className={NotoSans.className}
     >
       <body
         style={{
-          backgroundColor: colorStyles.dark.background.globe.default
+          backgroundColor: colorStyles.dark.background.globe.default,
+          height: "100%",
         }}
       >
-        <ClientLayoutShell>
-          {children}
-        </ClientLayoutShell>
+        <ThemeProvider theme={theme}>
+          <ClientLayout>
+            {children}
+          </ClientLayout>
+        </ThemeProvider>
       </body>
     </html >
   );

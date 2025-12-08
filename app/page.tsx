@@ -1,5 +1,12 @@
+import { Heading } from "@/components/core/data-display/typography/Heading";
+import { Container } from "@/components/core/layout/Container";
+
 export default function Home() {
   return (
-    <h1>Hello world</h1>
+    <Container
+      variant="full-width"
+    >
+
+    </Container>
   );
 }
