@@ -21,6 +21,7 @@ function RDDialog({ size = 'md', sx, setOpen, onClose, open, title, children, ..
         },
         '& .MuiPaper-root': {
           background: colorStyles.dark.background.globe.default,
+          border: `1px solid ${colorStyles.dark.background.border.default}`,
         },
         ...sx,
       }}
@@ -39,6 +40,7 @@ function RDDialog({ size = 'md', sx, setOpen, onClose, open, title, children, ..
         onClick={() => setOpen(false)}
         sx={{
           position: 'absolute',
+          zIndex: 1000,
           right: "1rem",
           top: "1rem",
           color: colorStyles.dark.text.primary.default,

@@ -1,3 +1,5 @@
+"use client"
+
 import { Button } from "@mui/material";
 import { colorStyles } from "@/utils/styles/colors";
 import RovnoLogotypeIcon from "../core/data-display/RovnoLogotype/LogotypeIcon";
@@ -6,10 +8,48 @@ import { Container } from "../core/layout/Container";
 import { TextLink } from "../core/data-display/typography/TextLink";
 import { Dialog } from "../core/data-display/Dialog";
 import MakeOrderDialog from "./MakeOrderDialog";
-import { useState } from "react";
+import { ReactNode, useEffect, useState } from "react";
 
 export default function BottomAppBar() {
   const [open, setOpen] = useState(false);
+  const [videoIframe] = useState<ReactNode>(
+    <div
+      style={{
+        position: 'relative',
+        width: "100%",
+        height: "100%",
+        overflow: 'hidden',
+      }}
+    >
+      <div
+        style={{
+          position: 'absolute',
+          width: "25%",
+          height: "100%",
+          background: `linear-gradient(90deg, ${colorStyles.dark.background.globe.default}, ${colorStyles.dark.background.globe.default}00)`,
+          zIndex: 30,
+        }}
+      >
+      </div>
+      <iframe
+        src="https://kinescope.io/embed/nDvtqWiHHm8SvrpVTXX268"
+        // allow="autoplay; fullscreen; picture-in-picture; encrypted-media; gyroscope; accelerometer; clipboard-write; screen-wake-lock;"
+        // allowfullscreen
+        style={{
+          zIndex: 20,
+          position: "absolute",
+          aspectRatio: '4/3',
+          width: "225%",
+          height: "100%",
+          top: '50%',
+          left: '50%',
+          transform: 'translate(-50%, -50%)',
+          borderRadius: '0 12px 12px 0',
+        }}
+      >
+      </iframe>
+    </div>
+  );
 
   const links = [
     ROUTES.cases,
@@ -67,7 +107,12 @@ export default function BottomAppBar() {
           >
             Оформить заказ
           </Button>
-          <MakeOrderDialog setOpen={setOpen} open={open} />
+          <MakeOrderDialog
+            setOpen={setOpen}
+            open={open}
+            keepMounted
+            videoIframe={videoIframe}
+          />
         </div>
       </Container>
     </nav>
