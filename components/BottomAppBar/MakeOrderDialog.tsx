@@ -2,16 +2,21 @@
 
 import { colorStyles } from "@/utils/styles/colors";
 import CheckIcon from '@mui/icons-material/Check';
-import { Button, DialogContent, TextField } from "@mui/material";
+import { Box, Button, Checkbox, DialogContent, FormHelperText, TextField } from "@mui/material";
 import { ReactNode, useState } from "react";
 import z from "zod";
 import { Dialog, DialogTitle, RDDialogProps } from "../core/data-display/Dialog";
+import { Text } from "@/components/core/data-display/typography/Text"
+import Link from "next/link";
+import { TextLink } from "../core/data-display/typography/TextLink";
+import { ROUTES } from "@/utils/constants/routes";
 
 export interface MakeOrderModalProps extends RDDialogProps {
-  videoIframe: ReactNode;
+  videoIframe?: ReactNode;
 }
 
-export default function MakeOrderModal({ videoIframe, ...props }: MakeOrderModalProps) {
+export default function MakeOrderModal({ ...props }: MakeOrderModalProps) {
+  const API_URL = process.env.NEXT_PUBLIC_API_URL;
   // const [files, setFiles] = useState('');
 
   const formSchema = z.object({
@@ -27,6 +32,9 @@ export default function MakeOrderModal({ videoIframe, ...props }: MakeOrderModal
       .string()
       .nonempty("Введите ваше имя")
       .min(2, "Слишком короткое имя"),
+    agreement: z
+      .string()
+      .nonempty("Дайте согласие на обработку ПД чтобы продолжить"),
   });
 
   type FormValues = z.infer<typeof formSchema>;
@@ -36,13 +44,16 @@ export default function MakeOrderModal({ videoIframe, ...props }: MakeOrderModal
     contacts: "",
     email: "",
     name: "",
+    agreement: '',
   });
 
   const filled =
     values.description &&
     values.contacts &&
     values.email &&
-    values.name;
+    values.name &&
+    values.agreement &&
+    formSchema.safeParse(values).success;
 
   const [errors, setErrors] = useState<Partial<Record<keyof FormValues, string>>>(
     {}
@@ -85,8 +96,24 @@ export default function MakeOrderModal({ videoIframe, ...props }: MakeOrderModal
       return;
     }
 
-    console.log("Form valid:", result.data);
-    // submit to backend here
+    makeOrder();
+  }
+
+  async function makeOrder() {
+    const response = await fetch(`${API_URL}/api/orders/v0/create`, {
+      method: "POST",
+      body: JSON.stringify({
+        company_name: "test",
+        needs_naming: "true",
+        short_description: values.description,
+        contacts: values.contacts,
+        email: values.email,
+        name: values.name,
+        agreed_to_share_personal_data: "true",
+      }),
+    });
+    const result = await response.json();
+    console.log(result);
   }
 
   return (
@@ -160,10 +187,38 @@ export default function MakeOrderModal({ videoIframe, ...props }: MakeOrderModal
                 value={files}
                 onChange={(e) => setFiles(e.target.value)}
               /> */}
+              <div className="flex flex-col gap-[0.25rem]">
+                <div className="flex items-center gap-[1rem]">
+                  <Checkbox
+                    // checked={values.agreement.length > 0}
+                    onChange={handleChange("agreement")}
+                    onBlur={handleBlur("agreement")}
+                    sx={{ padding: 0 }}
+                  />
+                  <Text component={'span'}>
+                    Даю согласие на обработку моих{" "}
+                    <TextLink
+                      color={colorStyles.dark.text.link.default}
+                      href={ROUTES.personalDataAgreement.href}
+                    >
+                      персональных данных
+                    </TextLink>
+                  </Text>
+                </div>
+
+                {errors.agreement && (
+                  <FormHelperText error sx={{ marginLeft: "2rem" }}>
+                    {errors.agreement}
+                  </FormHelperText>
+                )}
+              </div>
             </div>
             <Button
               sx={{
-                marginTop: '2.5rem'
+                marginTop: '2.5rem',
+                position: "sticky",
+                bottom: "20px",
+                left: 0,
               }}
               size="large"
               fullWidth
@@ -176,9 +231,44 @@ export default function MakeOrderModal({ videoIframe, ...props }: MakeOrderModal
               Оформить заказ
             </Button>
           </div>
-          {videoIframe}
+          <div
+            style={{
+              position: 'relative',
+              width: "100%",
+              height: "100%",
+              overflow: 'hidden',
+            }}
+          >
+            <div
+              style={{
+                position: 'absolute',
+                width: "25%",
+                height: "100%",
+                background: `linear-gradient(90deg, ${colorStyles.dark.background.globe.default}, ${colorStyles.dark.background.globe.default}00)`,
+                zIndex: 30,
+              }}
+            >
+            </div>
+            <iframe
+              src="https://kinescope.io/embed/nDvtqWiHHm8SvrpVTXX268"
+              // allow="autoplay; fullscreen; picture-in-picture; encrypted-media; gyroscope; accelerometer; clipboard-write; screen-wake-lock;"
+              // allowfullscreen
+              style={{
+                zIndex: 20,
+                position: "absolute",
+                aspectRatio: '4/3',
+                width: "225%",
+                height: "100%",
+                top: '50%',
+                left: '50%',
+                transform: 'translate(-50%, -50%)',
+                borderRadius: '0 12px 12px 0',
+              }}
+            >
+            </iframe>
+          </div>
         </div>
       </DialogContent>
-    </Dialog >
+    </Dialog>
   );
 }

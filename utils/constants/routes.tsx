@@ -1,11 +1,9 @@
-export const ROUTES: Record<string, {
-  href: string,
-  defaultTitle?: string,
-}> = {
+export const ROUTES = {
   home: { href: "/", defaultTitle: "Главная" },
-  cases: { href: "/cases", defaultTitle: "Кейсы" },
-  about: { href: "/about", defaultTitle: "Агентство" },
+  cases: { href: "/portfolio", defaultTitle: "Портфолио" },
+  about: { href: "/o-nas", defaultTitle: "О нас" },
   career: { href: "/rabota", defaultTitle: "Вакансии" },
   vershiny: { href: "/vershiny", defaultTitle: "Вершины" },
   journal: { href: "/jr", defaultTitle: "Журнал ровня" },
+  personalDataAgreement: { href: "/pd-soglasheniye", defaultTitle: "Соглашение на обработку ПД" },
 }

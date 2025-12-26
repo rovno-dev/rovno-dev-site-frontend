@@ -2,9 +2,11 @@ import { NotoSans } from "@/app/connectFonts";
 import { colorStyles } from "@/utils/styles/colors";
 import { TextVariantsType } from "@/utils/types/typogtaphy";
 import { CSSProperties } from "@mui/material";
+import React from "react";
 import { ReactNode } from "react";
 
 export interface TextProps {
+  component?: React.ElementType;
   variant?: TextVariantsType;
   color?: string;
   children?: ReactNode;
@@ -40,18 +42,18 @@ const textStyles = {
   },
 };
 
-function Text({ variant = 'default', color = colorStyles['dark'].text.primary.default, children, className }: TextProps) {
-  return (
-    <p
-      className={className}
-      style={{
+function Text({ component = 'p', variant = 'default', color = colorStyles['dark'].text.primary.default, children, className }: TextProps) {
+  return React.createElement(
+    component,
+    {
+      className: className,
+      style: {
         ...textStyles[variant],
         fontFamily: NotoSans.style.fontFamily,
         color,
-      }}
-    >
-      {children}
-    </p>
+      },
+    },
+    children
   );
 }
 

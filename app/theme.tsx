@@ -1,6 +1,6 @@
 "use client"
 
-import { createTheme } from "@mui/material";
+import { ButtonPropsVariantOverrides, createTheme } from "@mui/material";
 import { NotoSans } from "./connectFonts";
 import { COLORS, colorStyles } from "@/utils/styles/colors";
 
@@ -128,6 +128,40 @@ export const theme = createTheme({
       },
     },
     MuiButton: {
+      variants: [
+        {
+          props: { variant: "tonal" },
+          style: {
+            backgroundColor: colorStyles.dark.button.tonal.background,
+            color: colorStyles.dark.button.tonal.text.default,
+            borderRadius: "10px",
+            textTransform: "none",
+            transition: "background-color 0.2s",
+
+            "&:hover": {
+              backgroundColor: colorStyles.dark.button.hover.background,
+            },
+
+            "&.Mui-disabled": {
+              backgroundColor:
+                colorStyles.dark.button.vertical.disabled.background,
+              color: colorStyles.dark.text.muted.default,
+            },
+          },
+        },
+        {
+          props: { variant: "tonal-accent" },
+          style: {
+            backgroundColor: colorStyles.dark.button.tonal.background,
+            color: colorStyles.dark.button.tonal.text.accent,
+
+            "&:hover": {
+              backgroundColor: colorStyles.dark.button.hover.background,
+            },
+          },
+        }
+
+      ],
       styleOverrides: {
         root: {
           textTransform: "none",
@@ -174,6 +208,7 @@ export const theme = createTheme({
             color: colorStyles.dark.text.dimmed.default,
           },
         },
+
       },
     },
   }
