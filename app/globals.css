@@ -1,5 +1,14 @@
 @import "tailwindcss";
 
+:root {
+  --accent: #80A4FF;
+  --primary: #FFF;
+  --secondary: #D8D8D8;
+  --dimmed: #B3B3B3;
+  --tertiary: #787878;
+  --muted: #3B3B3B;
+}
+
 @font-face {
   font-family: "Oswald";
   src: url('/public/fonts/Oswald.ttf');
