@@ -6,7 +6,7 @@ export default function Home() {
     <Container
       variant="full-width"
     >
-
+      <h1>123</h1>
     </Container>
   );
 }

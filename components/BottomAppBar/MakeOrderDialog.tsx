@@ -2,7 +2,7 @@
 
 import { colorStyles } from "@/utils/styles/colors";
 import CheckIcon from '@mui/icons-material/Check';
-import { Box, Button, Checkbox, DialogContent, FormHelperText, IconButton, Snackbar, SnackbarCloseReason, TextField } from "@mui/material";
+import { Box, Button, Checkbox, DialogContent, FormHelperText, IconButton, Portal, Snackbar, SnackbarCloseReason, TextField } from "@mui/material";
 import { ReactNode, useState } from "react";
 import z from "zod";
 import { Dialog, DialogTitle, RDDialogProps } from "../core/data-display/Dialog";
@@ -12,6 +12,7 @@ import { TextLink } from "../core/data-display/typography/TextLink";
 import { ROUTES } from "@/utils/constants/routes";
 import { SegmentStateProvider } from "next/dist/next-devtools/userspace/app/segment-explorer-node";
 import CloseIcon from '@mui/icons-material/Close';
+import { error } from "console";
 
 export interface MakeOrderModalProps extends RDDialogProps {
   videoIframe?: ReactNode;
@@ -19,7 +20,8 @@ export interface MakeOrderModalProps extends RDDialogProps {
 
 export default function MakeOrderModal({ ...props }: MakeOrderModalProps) {
   const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
-  // const [files, setFiles] = useState('');
+  const [message, setMessage] = useState<string | undefined>(undefined);
+  const [loading, setLoading] = useState(false);
 
   const formSchema = z.object({
     companyName: z
@@ -114,6 +116,9 @@ export default function MakeOrderModal({ ...props }: MakeOrderModalProps) {
   async function makeOrder() {
     const response = await fetch(`${BASE_URL}/api/orders/v0/create`, {
       method: "POST",
+      headers: {
+        "Accept-Language": "ru"
+      },
       body: JSON.stringify({
         company_name: values.companyName,
         needs_naming: values.needsNaming,
@@ -124,11 +129,19 @@ export default function MakeOrderModal({ ...props }: MakeOrderModalProps) {
         agreed_to_share_personal_data: values.agreement ? values.agreement : true,
       }),
     });
-    const result = await response.json();
+    const data = await response.json();
     if (response.ok) {
       // TODO: add confetti effect
+      setMessage("🎉 Заказ оформлен!");
       setOpen(true);
       setTimeout(() => window.location.reload(), 6000)
+    } else {
+      if (response.status === 422) {
+        setErrors(data.errors)
+      } else {
+        setMessage("😢 Ошибка при создании заказа");
+        setOpen(true);
+      }
     }
   }
 
@@ -173,7 +186,7 @@ export default function MakeOrderModal({ ...props }: MakeOrderModalProps) {
                     helperText={errors.companyName}
                     {...(values.needsNaming ? { disabled: true } : {})}
                   />
-                  <div className="flex items-center gap-[0.75rem] cursor-not-allowed">
+                  <div className={`flex items-center gap-[0.75rem] ${values.companyName ? `cursor-not-allowed` : ''}`}>
                     <Checkbox
                       name="needsNaming"
                       onChange={(event) => setValues({ ...values, [event.target.name]: event.target.checked })}
@@ -184,7 +197,7 @@ export default function MakeOrderModal({ ...props }: MakeOrderModalProps) {
                     <Text
                       component={'span'}
                       variant="secondary"
-                      {...(values.companyName.length > 0 ? { color: colorStyles['dark'].text.muted.default } : {})}
+                      {...(values.companyName ? { color: colorStyles['dark'].text.muted.default } : {})}
                     >
                       Нужно придумать название
                     </Text>
@@ -284,6 +297,7 @@ export default function MakeOrderModal({ ...props }: MakeOrderModalProps) {
                 startIcon={filled && <CheckIcon />}
                 autoFocus
                 {...(filled ? {} : { disabled: true })}
+                loading={loading}
                 onClick={handleSubmit}
                 variant="contained"
               >
@@ -329,25 +343,26 @@ export default function MakeOrderModal({ ...props }: MakeOrderModalProps) {
           </div>
         </DialogContent>
       </Dialog>
-      <Snackbar
-        open={open}
-        autoHideDuration={6000}
-        onClose={handleClose}
-        message="🎉 Заказ оформлен!"
-        action={<>
-          <Button color="secondary" size="small" onClick={handleClose}>
-            UNDO
-          </Button>
-          <IconButton
-            size="small"
-            aria-label="close"
-            color="inherit"
-            onClick={handleClose}
-          >
-            <CloseIcon fontSize="small" />
-          </IconButton>
-        </>}
-      />
+      {message && (
+        <Portal>
+          <Snackbar
+            open={open}
+            autoHideDuration={6000}
+            onClose={handleClose}
+            message={message}
+            action={<>
+              <IconButton
+                size="large"
+                aria-label="close"
+                color="inherit"
+                onClick={handleClose}
+              >
+                <CloseIcon fontSize="small" />
+              </IconButton>
+            </>}
+          />
+        </Portal>
+      )}
     </>
   );
 }

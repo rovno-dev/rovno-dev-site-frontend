@@ -16,9 +16,7 @@ export default function BottomAppBar() {
   const links = [
     ROUTES.cases,
     ROUTES.about,
-    ROUTES.career,
     ROUTES.vershiny,
-    ROUTES.journal,
   ]
   return (
     <nav

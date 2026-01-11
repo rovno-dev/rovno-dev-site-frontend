@@ -13,15 +13,6 @@ COPY package.json package-lock.json ./
 RUN npm ci
 
 # ===============================
-# Dev
-# ===============================
-FROM base AS dev
-COPY --from=deps /app/node_modules ./node_modules
-COPY . .
-EXPOSE 3000
-CMD ["npm", "run", "dev"]
-
-# ===============================
 # Build
 # ===============================
 FROM base AS builder

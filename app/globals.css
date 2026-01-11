@@ -1,11 +1,1 @@
 @import "tailwindcss";
-
-@font-face {
-  font-family: "Oswald";
-  src: url('/public/fonts/Oswald.ttf');
-}
-
-@font-face {
-  font-family: "Noto Sans";
-  src: url('/public/fonts/NotoSans.ttf');
-}
