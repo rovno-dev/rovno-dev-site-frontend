@@ -4,7 +4,7 @@ import { Box } from "@mui/material";
 import Link, { LinkProps } from "next/link";
 import { createElement, ElementType, useState } from "react";
 
-export interface TextLinkProps extends Omit<TextProps, 'variant'>, LinkProps {
+export interface TextLinkProps extends Omit<TextProps, 'component'>, LinkProps {
   component?: ElementType | 'Heading' | 'Text' | 'Title',
 }
 

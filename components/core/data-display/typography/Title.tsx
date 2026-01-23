@@ -1,4 +1,4 @@
-import { TextProps } from "@/utils/interfaces/typogtaphy";
+import { TextProps } from "@/components/core/data-display/typography/Text";
 import { colorStyles } from "@/utils/styles/colors";
 
 const fontFamilies = {
